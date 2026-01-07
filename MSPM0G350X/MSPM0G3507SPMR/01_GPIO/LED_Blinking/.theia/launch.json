@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "LED_Blinking",
+            "type": "ccs-debug",
+            "request": "launch",
+            "projectInfo": {
+                "name": "LED_Blinking",
+                "resourceId": "/LED_Blinking"
+            }
+        }
+    ]
+}
