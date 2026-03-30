@@ -1,0 +1,70 @@
+/**
+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
+ * @cliArgs --device "MSPM0G350X" --part "Default" --package "LQFP-64(PM)" --product "mspm0_sdk@2.08.00.02"
+ * @v2CliArgs --device "MSPM0G3507" --package "LQFP-64(PM)" --product "mspm0_sdk@2.08.00.02"
+ * @versions {"tool":"1.25.0+4268"}
+ */
+
+/**
+ * Import the modules used in this configuration.
+ */
+const Board         = scripting.addModule("/ti/driverlib/Board");
+const DAC12         = scripting.addModule("/ti/driverlib/DAC12");
+const OPA           = scripting.addModule("/ti/driverlib/OPA", {}, false);
+const OPA1          = OPA.addInstance();
+const SYSCTL        = scripting.addModule("/ti/driverlib/SYSCTL");
+const VREF          = scripting.addModule("/ti/driverlib/VREF");
+const ProjectConfig = scripting.addModule("/ti/project_config/ProjectConfig");
+
+/**
+ * Write custom configuration values to the imported modules.
+ */
+const gate8  = system.clockTree["MFPCLKGATE"];
+gate8.enable = true;
+
+
+DAC12.dacPosVREF                = "VEREFP";
+DAC12.dacNegVREF                = "VEREFN";
+DAC12.dacOutputPinEn            = true;
+DAC12.dacOutput12               = 2043;
+DAC12.dacAmplifier              = "ON";
+DAC12.peripheral.$assign        = "DAC0";
+DAC12.peripheral.OutPin.$assign = "PA15";
+DAC12.OutPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric1";
+
+OPA1.$name                        = "OPA_0";
+OPA1.cfg0PSELChannel              = "DAC_OUT";
+OPA1.cfg0NSELChannel              = "RTAP";
+OPA1.cfg0MSELChannel              = "IN1_NEG";
+OPA1.cfg0Gain                     = "N15_P16";
+OPA1.cfg0OutputPin                = "ENABLED";
+OPA1.advBW                        = "HIGH";
+OPA1.In1NegPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric3";
+OPA1.peripheral.$assign           = "OPA1";
+OPA1.peripheral.In1NegPin.$assign = "PA17";
+OPA1.peripheral.OutPin.$assign    = "PA16";
+OPA1.OutPinConfig.$name           = "ti_driverlib_gpio_GPIOPinGeneric4";
+
+SYSCTL.clockTreeEn           = true;
+SYSCTL.forceDefaultClkConfig = true;
+
+VREF.basicVrefPins                 = "VREF+-";
+VREF.basicIntVolt                  = "DL_VREF_BUFCONFIG_OUTPUT_2_5V";
+VREF.checkVREFReady                = true;
+VREF.advClockConfigEnable          = true;
+VREF.advClkSrc                     = "DL_VREF_CLOCK_BUSCLK";
+VREF.vrefPosPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric0";
+VREF.peripheral.$assign            = "VREF";
+VREF.peripheral.vrefPosPin.$assign = "PA23";
+VREF.peripheral.vrefNegPin.$assign = "PA21";
+VREF.vrefNegPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric2";
+
+/**
+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
+ * re-solve from scratch.
+ */
+Board.peripheral.$suggestSolution          = "DEBUGSS";
+Board.peripheral.swclkPin.$suggestSolution = "PA20";
+Board.peripheral.swdioPin.$suggestSolution = "PA19";

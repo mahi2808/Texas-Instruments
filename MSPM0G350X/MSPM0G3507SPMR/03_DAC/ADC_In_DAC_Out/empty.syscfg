@@ -1,0 +1,57 @@
+/**
+ * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
+ * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
+ * @cliArgs --device "MSPM0G350X" --part "Default" --package "LQFP-64(PM)" --product "mspm0_sdk@2.07.00.06"
+ * @v2CliArgs --device "MSPM0G3507" --package "LQFP-64(PM)" --product "mspm0_sdk@2.07.00.06"
+ * @versions {"tool":"1.25.0+4268"}
+ */
+
+/**
+ * Import the modules used in this configuration.
+ */
+const ADC12         = scripting.addModule("/ti/driverlib/ADC12", {}, false);
+const ADC121        = ADC12.addInstance();
+const Board         = scripting.addModule("/ti/driverlib/Board");
+const DAC12         = scripting.addModule("/ti/driverlib/DAC12");
+const SYSCTL        = scripting.addModule("/ti/driverlib/SYSCTL");
+const ProjectConfig = scripting.addModule("/ti/project_config/ProjectConfig");
+
+/**
+ * Write custom configuration values to the imported modules.
+ */
+const gate8  = system.clockTree["MFPCLKGATE"];
+gate8.enable = true;
+
+ADC121.$name                      = "ADC12_0";
+ADC121.sampClkSrc                 = "DL_ADC12_CLOCK_ULPCLK";
+ADC121.sampClkDiv                 = "DL_ADC12_CLOCK_DIVIDE_8";
+ADC121.adcMem0chansel             = "DL_ADC12_INPUT_CHAN_2";
+ADC121.powerDownMode              = "DL_ADC12_POWER_DOWN_MODE_MANUAL";
+ADC121.sampleTime0                = "125 us";
+ADC121.enabledInterrupts          = ["DL_ADC12_INTERRUPT_MEM0_RESULT_LOADED"];
+ADC121.adcMem0avgen               = true;
+ADC121.hwNumerator                = "DL_ADC12_HW_AVG_NUM_ACC_128";
+ADC121.hwDenominator              = "DL_ADC12_HW_AVG_DEN_DIV_BY_128";
+ADC121.peripheral.$assign         = "ADC0";
+ADC121.peripheral.adcPin2.$assign = "PA25";
+ADC121.adcPin2Config.$name        = "ti_driverlib_gpio_GPIOPinGeneric0";
+
+
+DAC12.dacOutputPinEn     = true;
+DAC12.dacAmplifier       = "OFF_0V";
+DAC12.OutPinConfig.$name = "ti_driverlib_gpio_GPIOPinGeneric1";
+
+SYSCTL.MFPCLKEn              = true;
+SYSCTL.clockTreeEn           = true;
+SYSCTL.forceDefaultClkConfig = true;
+
+/**
+ * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
+ * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
+ * re-solve from scratch.
+ */
+Board.peripheral.$suggestSolution          = "DEBUGSS";
+Board.peripheral.swclkPin.$suggestSolution = "PA20";
+Board.peripheral.swdioPin.$suggestSolution = "PA19";
+DAC12.peripheral.$suggestSolution          = "DAC0";
+DAC12.peripheral.OutPin.$suggestSolution   = "PA15";
